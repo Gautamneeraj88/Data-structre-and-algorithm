@@ -1,64 +1,204 @@
 #include <iostream>
 using namespace std;
 
-class node{
-    public:
-    int info;
+class node
+{
+public:
+    int data;
     node *next;
-};
-
-class sll:public node{
-    private:
-    node *temp, *head, *tail;
-    public:
-    sll()
+    node()
     {
-        // temp->info = 0;7yy
-        temp->next = NULL;
-        head = tail = NULL;
+        next = NULL;
     }
-    sll(int el, sll *ptr = NULL)
+    node(int el, node *ptr = 0)
     {
-        info = el;
+        data = el;
         next = ptr;
     }
-    void add_to_head();
-    void display();
 };
 
-void sll::add_to_head()
+class sll : public node
 {
-    temp = new sll();//create a empty node step1
-    int x;
-    cout<<"Enter data: ";
-    cin>>x;
-    temp->info = x;//the node's info member is initialized to a particular interger.
-    if(head == NULL)
-    {
-        head = tail = temp;
-    }
-    else
-    {
-        temp->next = head; //the node is being included at the front of the list, the next member becomes
-                           //a pointer to the first node on the list; that is the current value of head;
-        head = temp;//update the value of head
-    }
-}
+    node *first, *last, *temp, *temp1;
 
-void sll::display()
-{
-    temp = head;
-    while(temp != NULL)
+public:
+    sll()
     {
-        cout<<temp->info<<" ";
-        temp = temp->next;
+        first = NULL;
+        last = NULL;
     }
-    cout<<endl;
-}
+
+    ~sll()
+    {
+        for (node *p; isempty();)
+        {
+            p = first->next;
+            delete first;
+            first = p;
+        }
+    }
+    int isempty()
+    {
+        if (first == NULL)
+            return first == 0;
+    }
+
+    void add_to_head(int el)
+    {
+        temp = new node(el);
+        if (first == NULL)
+        {
+            first = last = temp;
+        }
+        else
+        {
+            temp->next = first;
+            first = temp;
+        }
+    }
+
+    void add_to_tail(int el)
+    {
+        temp = new node(el);
+        if (first == NULL)
+        {
+            first = last = temp;
+        }
+        else
+        {
+            last->next = temp;
+            last = temp;
+        }
+    }
+    void add_to_between(int el)
+    {
+        temp1 = new node(el);
+        temp = first;
+        int key;
+        cout << "Enter value after you want to inster the node: ";
+        cin >> key;
+        while (temp != NULL)
+        {
+            if (key == temp->data)
+            {
+                temp1->next = temp->next;
+                temp->next = temp1;
+            }
+            temp = temp->next;
+        }
+    }
+
+    int delete_from_head()
+    {
+        int el = first->data;
+        temp = first->next;
+        if (first == last)
+        {
+            first = last = NULL;
+        }
+        else
+        {
+            delete first;
+            first = temp;
+        }
+        return el;
+    }
+
+    int delete_from_tail()
+    {
+        int el = last->data;
+        if (first == last)
+        {
+            delete first;
+            first = last = NULL;
+        }
+        else
+        {
+            for (temp = first; temp->next != last; temp = temp->next)
+            {
+                delete last;
+                last = temp;
+                last->next = NULL;
+            }
+            return el;
+        }
+    }
+    void display()
+    {
+        temp = first;
+        while (temp != NULL)
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
 
 int main()
 {
     sll singly;
-    singly.add_to_head();
-    singly.display();
+    char ch = 'y';
+    do
+    {
+        cout << "1. add to head"
+             << "\t2. display"
+             << "\t3.add to tail"
+             << "\t4.add to between"
+             << "\t5.delete from head"
+             << "\t6.delete from tail" << endl;
+        int choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+        {
+            cout << "Enter data: ";
+            int x;
+            cin >> x;
+            singly.add_to_head(x);
+            break;
+        }
+        case 2:
+        {
+            singly.display();
+            break;
+        }
+        case 3:
+        {
+            cout << "Enter data: ";
+            int x;
+            cin >> x;
+            singly.add_to_tail(x);
+            break;
+        }
+        case 4:
+        {
+            cout << "Enter data: ";
+            int x;
+            cin >> x;
+            singly.add_to_between(x);
+            break;
+        }
+        case 5:
+        {
+            cout << "Deleted node is: " << singly.delete_from_head() << endl;
+            break;
+        }
+        case 6:
+        {
+            cout << "Deleted node is: " << singly.delete_from_tail() << endl;
+            break;
+        }
+        default:
+        {
+            cout << "Wrong choice" << endl;
+            break;
+        }
+        }
+        cout << "Do you want to continue or not (y/n): ";
+        cin >> ch;
+    } while (ch == 'y' || ch == 'Y');
+    return 0;
 }
