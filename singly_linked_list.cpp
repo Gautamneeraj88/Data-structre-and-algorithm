@@ -107,19 +107,25 @@ public:
     int delete_from_tail()
     {
         int el = last->data;
-        if (first == last)
+        if(first == NULL)
+        {
+            cout<<"Error"<<endl;
+        }
+        else if (first == last)
         {
             delete first;
-            first = last = NULL;
+            first=last = NULL;
         }
         else
         {
-            for (temp = first; temp->next != last; temp = temp->next)
+            temp = first;
+            while(temp->next != last)
             {
-                delete last;
-                last = temp;
-                last->next = NULL;
+                temp = temp->next;
             }
+            last = temp;
+            delete temp->next;
+            temp->next = NULL;
             return el;
         }
     }
